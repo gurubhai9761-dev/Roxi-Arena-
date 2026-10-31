@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roxi Arena</title>
+<meta name="description" content="Roxi Arena: Free Fire Solo, Duo and Squad tournaments with cash per kill and Booyah prizes. Sunday live on YouTube.">
+<meta property="og:title" content="Roxi Arena">
+<meta property="og:description" content="Free Fire Solo, Duo and Squad tournaments. Register, pay by QR, join the WhatsApp group. Sunday live on YouTube @29rxp.">
+<meta name="theme-color" content="#111112">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/* Layout: crimson-on-charcoal. Hero with a wireframe trophy on canvas, then modes, prizes, rules,
+   registration, YouTube highlights. A second view (#live) is the Sunday live page. */
+:root {
+  --bg: #111112;
+  --bg-2: #171718;
+  --surface: rgba(28, 28, 30, 0.82);
+  --line: rgba(236, 232, 228, 0.12);
+  --fg: #f1eeeb;
+  --bone: #ece8e4;
+  --muted: #a8a3a2;
+  --red: #ff3b43;
+  --red-b: #d91f27;
+  --red-d: #7d1217;
+  --danger: #ff9a9a;
+  --f-display: 'Orbitron', 'Arial Black', 'Segoe UI', sans-serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.6 var(--f-body); overflow-x: hidden; }
+h1, h2, h3, h4, p, ol, ul, dl, dd, figure { margin: 0; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.1; text-wrap: balance; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+section[id] { scroll-margin-top: 16px; }
+
+.wrap { width: 100%; max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 600 0.75rem/1.2 var(--f-body); letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); }
+.section { padding-block: clamp(48px, 7vw, 96px); border-top: 1px solid var(--line); }
+.section-head { display: flex; flex-direction: column; gap: 14px; max-width: 40rem; padding-bottom: clamp(22px, 3vw, 36px); }
+.section-head h2 { font-size: clamp(1.5rem, 4.4vw, 2.4rem); font-weight: 700; letter-spacing: 0.02em; }
+.section-head p { color: var(--muted); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 26px; font: 700 0.82rem/1 var(--f-display); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s; }
+.btn-red { background: var(--red-b); color: #fff; box-shadow: 0 6px 28px rgba(217,31,39,0.4); }
+.btn-red:hover { background: #ef3139; box-shadow: 0 8px 36px rgba(255,59,67,0.5); }
+.btn-bone { background: var(--bone); color: var(--bg); }
+.btn-bone:hover { background: #fff; }
+.btn-ghost { background: transparent; color: var(--fg); border-color: rgba(236,232,228,0.28); }
+.btn-ghost:hover { border-color: var(--red); color: var(--red); }
+.btn-sm { min-height: 40px; padding: 9px 18px; font-size: 0.7rem; }
+
+/* Top bar */
+.topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 20px; }
+.mark { font: 900 1.05rem/1 var(--f-display); letter-spacing: 0.18em; text-decoration: none; }
+.mark b { color: var(--red); font-weight: 900; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px 22px; font: 600 0.72rem/1 var(--f-body); letter-spacing: 0.16em; text-transform: uppercase; }
+.nav a { text-decoration: none; color: var(--muted); padding-block: 6px; }
+.nav a:hover { color: var(--fg); }
+.nav a.live { color: var(--red); }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(120% 90% at 78% 40%, #1f1213 0%, var(--bg) 62%); }
+#stage { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, rgba(17,17,18,0.82) 0%, rgba(17,17,18,0.3) 58%, rgba(17,17,18,0) 100%); }
+.hero-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 32px; padding-block: clamp(32px, 7vw, 84px) clamp(48px, 7vw, 88px); }
+.hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; min-width: 0; }
+.hero h1 { font-weight: 900; font-size: clamp(2.6rem, 11vw, 6rem); letter-spacing: 0.04em; text-shadow: 0 0 30px rgba(255,59,67,0.4); }
+.hero h1 span { color: var(--red); }
+.lede { max-width: 33rem; font-size: 1.05rem; color: var(--bone); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 12px; border: 1px solid var(--line); border-radius: 3px; font: 600 0.7rem/1.2 var(--f-body); letter-spacing: 0.14em; text-transform: uppercase; background: rgba(17,17,18,0.55); }
+.chip.dim { color: var(--muted); border-style: dashed; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.count { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
+.count-label { flex-basis: 100%; font: 600 0.72rem/1 var(--f-body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.unit { display: flex; flex-direction: column; gap: 4px; min-width: 3.4rem; }
+.unit b { font: 700 1.7rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.unit i { font: 500 0.68rem/1 var(--f-body); font-style: normal; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+
+/* Modes */
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); }
+.mode { display: flex; flex-direction: column; gap: 18px; padding: clamp(18px, 3vw, 28px); border: 1px solid var(--line); border-top: 3px solid var(--red); background: var(--bg-2); min-width: 0; }
+.mode.soon { border-top-color: var(--line); opacity: 0.82; }
+.mode h3 { font-size: 1.7rem; font-weight: 900; letter-spacing: 0.06em; }
+.status { align-self: flex-start; font: 600 0.68rem/1 var(--f-body); letter-spacing: 0.16em; text-transform: uppercase; padding: 7px 10px; border-radius: 3px; background: rgba(255,59,67,0.14); color: var(--red); }
+.mode.soon .status { background: rgba(236,232,228,0.08); color: var(--muted); }
+.mode dl { display: grid; gap: 0; }
+.mode dl div { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); gap: 12px; padding-block: 10px; border-top: 1px solid var(--line); font-size: 0.93rem; }
+.mode dt { color: var(--muted); }
+.mode dd { min-width: 0; }
+.day { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; margin-bottom: 22px; padding: 14px 18px; border-left: 3px solid var(--red); background: var(--bg-2); }
+.day b { font: 700 1rem/1.2 var(--f-display); letter-spacing: 0.04em; }
+.day span { color: var(--muted); font-size: 0.92rem; }
+
+/* Prize table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); }
+table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.95rem; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 0.7rem/1.2 var(--f-body); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); background: var(--bg-2); }
+tr:last-child td { border-bottom: 0; }
+td b { font: 700 1rem/1.2 var(--f-display); font-variant-numeric: tabular-nums; }
+td.big { color: var(--red); }
+tr.soon td { color: var(--muted); }
+.note { margin-top: 14px; color: var(--muted); font-size: 0.9rem; max-width: 46rem; }
+.note a { color: var(--red); }
+
+/* Rules */
+.rules-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 4vw, 56px); }
+.rules-grid h3 { font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
+.rule { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 6px; padding-block: 12px; border-top: 1px solid var(--line); }
+.rule i { font-style: normal; font: 700 0.95rem/1.6 var(--f-display); color: var(--red); }
+.rule.ok i { color: var(--bone); }
+.rule strong { display: block; font-weight: 600; }
+.rule span { color: var(--muted); font-size: 0.93rem; }
+
+/* Registration */
+.reg { position: relative; overflow: hidden; isolation: isolate; background: var(--bg-2); }
+.reg-grid { position: absolute; z-index: -1; width: 220%; height: 160%; left: -60%; bottom: -30%; pointer-events: none; opacity: 0.45; transition: opacity 0.9s ease; background-image: linear-gradient(rgba(255,59,67,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,59,67,0.18) 1px, transparent 1px); background-size: 56px 56px; transform: perspective(520px) rotateX(64deg); transform-origin: 50% 100%; -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 78%); mask-image: linear-gradient(to top, #000 0%, transparent 78%); animation: gridMove 14s linear infinite; }
+.reg.live .reg-grid { opacity: 1; }
+@keyframes gridMove { from { background-position: 0 0; } to { background-position: 0 56px; } }
+.reg .section-head { margin-inline: auto; text-align: center; align-items: center; }
+.terminal { width: 100%; max-width: 680px; margin-inline: auto; background: var(--surface); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,59,67,0.3); border-radius: 10px; box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 36px rgba(255,59,67,0.08); transition: border-color 0.3s, box-shadow 0.3s; }
+.terminal:focus-within { border-color: rgba(255,59,67,0.65); box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 44px rgba(255,59,67,0.18); }
+.term-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding: 14px clamp(16px, 4vw, 32px); border-bottom: 1px solid var(--line); font: 500 0.7rem/1.3 var(--f-body); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.term-bar b { color: var(--red); font-weight: 600; }
+.term-body { padding: clamp(18px, 4vw, 36px); }
+.steps { position: relative; display: flex; justify-content: space-between; max-width: 70%; margin: 0 auto 34px; }
+.steps::before, .steps .fill { content: ""; position: absolute; top: 50%; left: 0; height: 2px; transform: translateY(-50%); }
+.steps::before { width: 100%; background: rgba(236,232,228,0.14); }
+.steps .fill { width: 0; background: var(--red); box-shadow: 0 0 12px rgba(255,59,67,0.6); transition: width 0.5s ease; }
+.node { position: relative; z-index: 1; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); border: 2px solid rgba(236,232,228,0.24); color: var(--muted); font: 700 0.85rem/1 var(--f-display); transition: all 0.35s ease; }
+.node.active { border-color: var(--red); color: var(--red); box-shadow: 0 0 16px rgba(255,59,67,0.6); }
+.node.done { border-color: var(--red); background: var(--red); color: var(--bg); }
+.step-title { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding-left: 12px; border-left: 3px solid var(--red); margin-bottom: 22px; }
+.field { display: grid; gap: 7px; margin-bottom: 18px; min-width: 0; }
+.field label, .field .lbl, legend { font: 600 0.72rem/1.3 var(--f-body); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding: 0; }
+.field label em, legend em { font-style: normal; color: var(--red); letter-spacing: 0.1em; }
+.field input[type="text"], .field input[type="tel"] { width: 100%; min-height: 48px; padding: 12px 14px; background: rgba(0,0,0,0.42); border: 1px solid rgba(236,232,228,0.14); border-radius: 6px; color: var(--fg); font: 400 1rem/1.3 var(--f-body); transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
+.field input::placeholder { color: #77716f; }
+.field input[type="text"]:focus, .field input[type="tel"]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(255,59,67,0.18); background: rgba(0,0,0,0.6); }
+.field input.invalid { border-color: var(--danger); }
+.hint { font-size: 0.82rem; color: var(--muted); }
+.err { font-size: 0.82rem; color: var(--danger); }
+.err:empty { display: none; }
+fieldset { border: 0; margin: 0 0 20px; padding: 0; min-width: 0; }
+legend { margin-bottom: 10px; }
+.choice { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.choice.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pick { position: relative; min-width: 0; }
+.pick input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.tile { display: grid; gap: 4px; height: 100%; padding: 14px; border: 1px solid rgba(236,232,228,0.18); border-radius: 6px; background: rgba(0,0,0,0.3); transition: border-color 0.2s, background 0.2s; }
+.tile b { font: 700 1rem/1.1 var(--f-display); letter-spacing: 0.06em; }
+.tile span { font-size: 0.8rem; color: var(--muted); }
+.pick input:checked + .tile { border-color: var(--red); background: rgba(255,59,67,0.12); box-shadow: 0 0 0 1px var(--red) inset; }
+.pick input:focus-visible + .tile { outline: 2px solid var(--bone); outline-offset: 3px; }
+.pick input:disabled { cursor: not-allowed; }
+.pick input:disabled + .tile { opacity: 0.5; border-style: dashed; }
+.summary { padding: 14px 16px; margin-bottom: 20px; border-left: 3px solid var(--red); background: rgba(0,0,0,0.3); font-size: 0.92rem; }
+.summary strong { display: block; margin-bottom: 2px; }
+.drop { position: relative; border: 1px dashed rgba(236,232,228,0.3); border-radius: 6px; background: rgba(0,0,0,0.25); transition: border-color 0.2s, background 0.2s; }
+.drop:hover, .drop.over, .drop:focus-within { border-color: var(--red); background: rgba(255,59,67,0.06); }
+.drop.invalid { border-color: var(--danger); }
+.drop input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.drop-inner { display: flex; align-items: center; gap: 16px; padding: 18px; min-height: 92px; }
+.drop-inner img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); flex: none; }
+.drop-inner div { display: grid; gap: 3px; min-width: 0; }
+.drop-inner strong { font-weight: 600; overflow-wrap: anywhere; }
+.drop-inner span { font-size: 0.82rem; color: var(--muted); }
+.players { display: grid; gap: 14px; margin-bottom: 18px; }
+.player { padding: 16px 16px 2px; border: 1px solid var(--line); border-radius: 8px; background: rgba(0,0,0,0.22); min-width: 0; }
+.player h4 { font: 700 0.78rem/1.2 var(--f-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin: 0 0 14px; }
+.pgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; }
+.check { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 6px; }
+.check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--red-b); flex: none; }
+.check label { font-size: 0.92rem; letter-spacing: 0; text-transform: none; color: var(--fg); font-weight: 400; }
+.btns { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.done-panel { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.tick { width: 68px; height: 68px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--red); color: var(--red); font-size: 2rem; box-shadow: 0 0 28px rgba(255,59,67,0.45); }
+.done-panel h3 { font-size: 1.3rem; letter-spacing: 0.06em; }
+.done-panel p { color: var(--muted); max-width: 32rem; }
+.ref { font: 700 1.15rem/1 var(--f-display); letter-spacing: 0.14em; color: var(--red); user-select: all; }
+.msg { width: 100%; max-height: 280px; overflow: auto; margin: 0; padding: 16px; text-align: left; font: 400 0.85rem/1.6 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; background: rgba(0,0,0,0.45); border: 1px dashed rgba(255,59,67,0.5); border-radius: 6px; color: var(--bone); user-select: all; }
+.qrs { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; width: 100%; }
+.qrbox { display: grid; gap: 10px; justify-items: center; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: rgba(0,0,0,0.3); max-width: 100%; min-width: 0; }
+.qrbox h4 { font: 700 0.8rem/1.3 var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; }
+.qr { background: #fff; padding: 8px; border-radius: 6px; width: min(220px, 62vw); }
+.qr svg { display: block; width: 100%; height: auto; }
+.qrbox p { font-size: 0.85rem; overflow-wrap: anywhere; }
+.qrbox .small { font-size: 0.8rem; color: var(--muted); max-width: 18rem; text-align: center; }
+.dsteps { counter-reset: s; display: grid; gap: 10px; width: 100%; max-width: 34rem; text-align: left; }
+.dsteps li { counter-increment: s; display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: 6px; font-size: 0.95rem; }
+.dsteps li::before { content: counter(s); font: 700 0.85rem/1.7 var(--f-display); color: var(--red); }
+.row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+/* YouTube highlights */
+.yt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); align-items: center; padding: clamp(22px, 4vw, 44px); border: 1px solid var(--line); background: linear-gradient(120deg, rgba(255,59,67,0.12), transparent 60%), var(--bg-2); }
+.play { width: clamp(88px, 14vw, 140px); aspect-ratio: 16 / 10; display: grid; place-items: center; border-radius: 14px; background: var(--red-b); box-shadow: 0 10px 40px rgba(217,31,39,0.45); }
+.play::before { content: ""; width: 26%; aspect-ratio: 1; margin-left: 6%; background: #fff; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.yt-copy { display: grid; gap: 12px; justify-items: start; min-width: 0; }
+.yt-copy h2 { font-size: clamp(1.3rem, 3.6vw, 2rem); }
+.yt-copy p { color: var(--muted); max-width: 36rem; }
+.handle { font: 700 1rem/1 var(--f-display); letter-spacing: 0.08em; color: var(--red); }
+
+/* Sunday live page */
+.live-hero { position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(90% 120% at 15% 0%, #2a1012 0%, var(--bg) 65%); }
+.live-hero::after { content: "LIVE"; position: absolute; right: -2%; bottom: -12%; z-index: -1; font: 900 clamp(8rem, 30vw, 24rem)/1 var(--f-display); color: transparent; -webkit-text-stroke: 1px rgba(255,59,67,0.28); pointer-events: none; }
+.live-body { display: grid; gap: 22px; justify-items: start; padding-block: clamp(32px, 7vw, 80px) clamp(48px, 8vw, 96px); max-width: 44rem; }
+.live-body h1 { font-size: clamp(2.4rem, 10vw, 5rem); font-weight: 900; letter-spacing: 0.04em; }
+.onair { display: inline-flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 3px; background: rgba(255,59,67,0.16); color: var(--red); font: 700 0.74rem/1 var(--f-body); letter-spacing: 0.18em; text-transform: uppercase; }
+.onair::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); animation: pulse 1.6s ease-in-out infinite; }
+.onair.idle::before { animation: none; opacity: 0.5; }
+@keyframes pulse { 50% { opacity: 0.25; } }
+.next-live { display: grid; gap: 4px; }
+.next-live span { font: 600 0.72rem/1 var(--f-body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.next-live b { font: 700 clamp(1.3rem, 4.5vw, 2rem)/1.2 var(--f-display); }
+.live-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 3vw, 32px); }
+.live-cols li { display: grid; gap: 8px; padding-top: 16px; border-top: 2px solid var(--red); align-content: start; }
+.live-cols h3 { font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.live-cols p { color: var(--muted); font-size: 0.95rem; }
+.sunday-box { margin-top: clamp(24px, 4vw, 40px); padding: clamp(18px, 3vw, 28px); border: 1px dashed rgba(255,59,67,0.5); display: grid; gap: 8px; }
+.sunday-box h3 { font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.sunday-box p { color: var(--muted); max-width: 40rem; }
+
+/* Footer */
+.foot { border-top: 1px solid var(--line); background: #0c0c0d; padding-block: clamp(36px, 5vw, 56px) 28px; }
+.foot-top { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)); gap: 32px; }
+.foot h4 { margin: 0 0 12px; font: 600 0.72rem/1 var(--f-body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.foot li + li { margin-top: 8px; }
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--red); }
+.foot-note { font-size: 0.85rem; color: var(--muted); max-width: 26rem; margin-top: 12px; }
+.legal { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .hero-body { grid-template-columns: minmax(0, 1fr); }
+  .hero::after { background: linear-gradient(180deg, rgba(17,17,18,0.7), rgba(17,17,18,0.5)); }
+  .modes, .live-cols { grid-template-columns: minmax(0, 1fr); }
+  .rules-grid { grid-template-columns: minmax(0, 1fr); }
+  .foot-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .foot-top > :first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .pgrid { grid-template-columns: minmax(0, 1fr); }
+  .choice { grid-template-columns: minmax(0, 1fr); }
+  .choice.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .yt { grid-template-columns: minmax(0, 1fr); }
+  .btns .btn { flex: 1 1 auto; }
+  .mode dl div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reg-grid, .onair::before { animation: none; }
+  .steps .fill, .node, .btn { transition: none; }
+}
+
+.sched { display: grid; margin-bottom: clamp(28px, 4vw, 44px); border-top: 1px solid var(--line); }
+.sched li { display: grid; grid-template-columns: 9rem 6rem minmax(0, 1fr); gap: 6px 16px; align-items: baseline; padding: 16px 4px; border-bottom: 1px solid var(--line); transition: background 0.2s, padding-left 0.25s; }
+.sched li:hover { background: rgba(255,59,67,0.05); padding-left: 12px; }
+.sched time { font: 700 1rem/1.2 var(--f-display); font-variant-numeric: tabular-nums; color: var(--red); }
+.sched b { font: 700 1rem/1.2 var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; }
+.sched span { color: var(--muted); font-size: 0.93rem; }
+.sched .tba time { color: var(--muted); }
+@media (max-width: 560px) { .sched li { grid-template-columns: minmax(0, 1fr) auto; } .sched li span { grid-column: 1 / -1; } }
+
+/* Motion */
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+#prog { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; width: 100%; height: 3px; transform-origin: 0 50%; transform: scaleX(0); background: var(--red); box-shadow: 0 0 10px rgba(255,59,67,0.7); z-index: 50; pointer-events: none; }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.hero-copy > *, .live-body > * { animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.hero-copy > *:nth-child(2), .live-body > *:nth-child(2) { animation-delay: 0.08s; }
+.hero-copy > *:nth-child(3), .live-body > *:nth-child(3) { animation-delay: 0.16s; }
+.hero-copy > *:nth-child(4), .live-body > *:nth-child(4) { animation-delay: 0.24s; }
+.hero-copy > *:nth-child(5), .live-body > *:nth-child(5) { animation-delay: 0.32s; }
+.hero-copy > *:nth-child(6) { animation-delay: 0.4s; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.view-in { animation: viewIn 0.5s ease both; }
+@keyframes stepIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+.form-step:not([hidden]) { animation: stepIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes pop { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.tick { animation: pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+.btn { transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s, transform 0.2s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.tile { transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+.pick:hover .tile { transform: translateY(-2px); }
+.mode { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.mode:not(.soon):hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 28px rgba(255,59,67,0.14); }
+tbody tr { transition: background 0.2s; }
+tbody tr:hover { background: rgba(255,59,67,0.06); }
+.rule { transition: background 0.2s, padding-left 0.25s; }
+.rule:hover { padding-left: 8px; background: rgba(255,59,67,0.04); }
+.nav a { transition: color 0.2s; }
+.rv { opacity: 0.35; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .rv { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog" aria-hidden="true"></div>
+<div id="viewHome">
+<header class="hero" id="hero">
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="mark" href="#home">ROXI<b>ARENA</b></a>
+      <nav class="nav" aria-label="Main">
+        <a href="#modes">Modes</a>
+        <a href="#prizes">Prizes</a>
+        <a href="#rules">Rules</a>
+        <a href="#register">Register</a>
+        <a class="live" href="#live">Sunday Live</a>
+      </nav>
+    </div>
+    <div class="hero-body">
+      <div class="hero-copy">
+        <p class="eyebrow">Free Fire custom-room tournaments</p>
+        <h1>ROXI <span>ARENA</span></h1>
+        <p class="lede">Solo, Duo and Squad tournaments with cash per kill and Booyah prizes. The first tournament starts on 9 November 2026.</p>
+        <div class="chips">
+          <span class="chip">Solo · 12:00 PM</span>
+          <span class="chip">Duo · After 3:00 PM</span>
+          <span class="chip">Sunday 22 Nov · Live on YouTube</span>
+          <span class="chip dim">Squad · Coming soon</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-red" href="#register">Register now</a>
+          <a class="btn btn-ghost" id="ytHero" href="https://www.youtube.com/@29rxp" rel="noopener">Watch highlights</a>
+        </div>
+        <div class="count" role="timer" aria-live="off">
+          <span class="count-label" id="countLabel">First solo match starts in</span>
+          <span class="unit"><b id="cd-d">--</b><i>Days</i></span>
+          <span class="unit"><b id="cd-h">--</b><i>Hours</i></span>
+          <span class="unit"><b id="cd-m">--</b><i>Min</i></span>
+          <span class="unit"><b id="cd-s">--</b><i>Sec</i></span>
+        </div>
+      </div>
+      <div aria-hidden="true"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section" id="modes">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Tournaments</p>
+      <h2>Pick your mode</h2>
+      <p>Every mode has a fixed number of slots. When a mode is full, registration opens for the next date.</p>
+    </div>
+    <div class="day"><b>Day 1 · Monday 9 November 2026</b><span>All times are India Standard Time (IST).</span></div>
+    <div class="modes">
+      <article class="mode" data-mode="solo">
+        <span class="status" data-status="solo">Registration open</span>
+        <h3>SOLO</h3>
+        <dl>
+          <div><dt>Match time</dt><dd>12:00 PM</dd></div>
+          <div><dt>Players</dt><dd>50 to 52 players</dd></div>
+          <div><dt>Entry</dt><dd>₹15 or ₹30</dd></div>
+          <div><dt>Team logo</dt><dd>Not needed</dd></div>
+        </dl>
+      </article>
+      <article class="mode" data-mode="duo">
+        <span class="status" data-status="duo">Registration open</span>
+        <h3>DUO</h3>
+        <dl>
+          <div><dt>Match time</dt><dd>After 3:00 PM. The exact time is posted in the WhatsApp group after you register.</dd></div>
+          <div><dt>Teams</dt><dd>25 teams (50 players)</dd></div>
+          <div><dt>Entry</dt><dd>₹30 per team</dd></div>
+          <div><dt>Team logo</dt><dd>Optional</dd></div>
+        </dl>
+      </article>
+      <article class="mode soon" data-mode="squad">
+        <span class="status" data-status="squad">Coming soon</span>
+        <h3>SQUAD</h3>
+        <dl>
+          <div><dt>Match time</dt><dd>Announced in the WhatsApp group</dd></div>
+          <div><dt>Teams</dt><dd>12 teams (48 players)</dd></div>
+          <div><dt>Entry</dt><dd>₹40 for 3 back-to-back matches</dd></div>
+          <div><dt>Team logo</dt><dd>Required</dd></div>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="prizes">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Entry and prizes</p>
+      <h2>What you pay and what you win</h2>
+      <p>You earn ₹10 for every kill in every mode, plus the Booyah prize.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tournament</th><th>Entry</th><th>Per kill</th><th>Booyah prize</th></tr></thead>
+        <tbody>
+          <tr><td><b>Solo</b> · ₹15 room</td><td><b>₹15</b></td><td><b>₹10</b></td><td class="big"><b>₹40</b> for the winner</td></tr>
+          <tr><td><b>Solo</b> · ₹30 room</td><td><b>₹30</b></td><td><b>₹10</b></td><td><b class="big" style="color:var(--red)">1st ₹150</b><br>2nd ₹100<br>3rd gets a free entry in the next match</td></tr>
+          <tr><td><b>Duo</b></td><td><b>₹30</b> per team</td><td><b>₹10</b></td><td class="big"><b>₹40</b> for the winning team</td></tr>
+          <tr class="soon"><td><b>Squad</b> · 3 back-to-back matches</td><td><b>₹40</b></td><td>Announced soon</td><td>Announced soon</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">These prizes apply Monday to Saturday. Sunday has its own live tournament on 22 November with different prizes. See the <a href="#live">Sunday Live page</a>.</p>
+  </div>
+</section>
+
+<section class="section" id="rules">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Rules</p>
+      <h2>Play clean or sit out</h2>
+      <p>Breaking a rule means disqualification. Updates and room times are posted in the WhatsApp group after you register.</p>
+    </div>
+    <div class="rules-grid">
+      <div>
+        <h3>Not allowed</h3>
+        <ul>
+          <li class="rule"><i>✕</i><div><strong>No PC players</strong><span>Mobile players only.</span></div></li>
+          <li class="rule"><i>✕</i><div><strong>No hacks</strong><span>Any cheat or modified client means disqualification.</span></div></li>
+          <li class="rule"><i>✕</i><div><strong>No bypass</strong><span>No bypass tools or workarounds of any kind.</span></div></li>
+          <li class="rule"><i>✕</i><div><strong>No team-ups</strong><span>Solo and Duo players cannot work with other players or teams.</span></div></li>
+          <li class="rule"><i>✕</i><div><strong>Misha character is banned</strong><span>You cannot pick the Misha character in any mode.</span></div></li>
+          <li class="rule"><i>✕</i><div><strong>Duo: no same active skill</strong><span>The two partners must use different active skills.</span></div></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Fair play and highlights</h3>
+        <ul>
+          <li class="rule ok"><i>●</i><div><strong>Recording is mandatory for reports</strong><span>If you see a suspicious team or player, send the recording of that match. A report without a recording is not accepted.</span></div></li>
+          <li class="rule ok"><i>●</i><div><strong>Highlights within 48 hours</strong><span>Each tournament's highlights are uploaded to the YouTube channel @29rxp within 48 hours.</span></div></li>
+          <li class="rule ok"><i>●</i><div><strong>Video link in your group</strong><span>The highlight video link is sent to your WhatsApp group once it is uploaded.</span></div></li>
+          <li class="rule ok"><i>●</i><div><strong>More updates after you register</strong><span>Room time, room details and changes are posted in the WhatsApp group.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section reg" id="register">
+  <div class="reg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Registration</p>
+      <h2>Lock your slot</h2>
+      <p>Register, get a payment QR on WhatsApp, pay, then join the group. Every player needs a legal name, WhatsApp number, game UID and in-game name.</p>
+    </div>
+
+    <div class="terminal">
+      <div class="term-bar"><span>Roxi Arena · Entry desk</span><b id="stepLabel">Step 1 of 2</b></div>
+      <div class="term-body">
+        <div id="formWrap">
+          <div class="steps" id="steps" aria-hidden="true"><div class="fill" id="fill"></div></div>
+
+          <form id="regForm" novalidate autocomplete="off">
+            <div class="form-step" data-step="mode">
+              <h3 class="step-title">Choose a mode</h3>
+              <fieldset>
+                <legend>Match day</legend>
+                <div class="choice two">
+                  <div class="pick"><input type="radio" name="day" id="day-daily" value="daily" checked><label class="tile" for="day-daily"><b>DAILY</b><span>From 9 Nov, Mon to Sat</span></label></div>
+                  <div class="pick"><input type="radio" name="day" id="day-sunday" value="sunday"><label class="tile" for="day-sunday"><b>SUNDAY LIVE</b><span>22 Nov · live on YouTube</span></label></div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>Tournament</legend>
+                <div class="choice" id="modeChoice">
+                  <div class="pick"><input type="radio" name="mode" id="mode-solo" value="solo" checked><label class="tile" for="mode-solo"><b>SOLO</b><span>12:00 PM</span></label></div>
+                  <div class="pick"><input type="radio" name="mode" id="mode-duo" value="duo"><label class="tile" for="mode-duo"><b>DUO</b><span>After 3:00 PM</span></label></div>
+                  <div class="pick"><input type="radio" name="mode" id="mode-squad" value="squad"><label class="tile" for="mode-squad"><b>SQUAD</b><span id="squadSub">Coming soon</span></label></div>
+                </div>
+              </fieldset>
+              <fieldset id="tierSet">
+                <legend>Solo entry</legend>
+                <div class="choice two">
+                  <div class="pick"><input type="radio" name="tier" id="tier-15" value="15" checked><label class="tile" for="tier-15"><b>₹15</b><span>₹10 per kill · Booyah ₹40</span></label></div>
+                  <div class="pick"><input type="radio" name="tier" id="tier-30" value="30"><label class="tile" for="tier-30"><b>₹30</b><span>₹10 per kill · 1st ₹150, 2nd ₹100</span></label></div>
+                </div>
+              </fieldset>
+              <div class="summary" id="modeInfo" aria-live="polite"></div>
+              <div class="btns"><button type="button" class="btn btn-red" data-next>Next</button></div>
+            </div>
+
+            <div class="form-step" data-step="team" hidden>
+              <h3 class="step-title">Your team</h3>
+              <div class="field">
+                <label for="teamName">Team name</label>
+                <input id="teamName" type="text" maxlength="24" placeholder="Team name">
+                <p class="err" id="e-teamName" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="teamLogo">Team logo <em id="logoReq">Optional</em></label>
+                <div class="drop" id="drop">
+                  <input id="teamLogo" type="file" accept="image/png,image/jpeg">
+                  <div class="drop-inner">
+                    <img id="logoPrev" alt="Logo preview" hidden>
+                    <div>
+                      <strong id="dropTitle">Drop your logo here or browse</strong>
+                      <span id="dropMeta">PNG or JPG, up to 2 MB, at least 256 × 256 px.</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="err" id="e-teamLogo" aria-live="polite"></p>
+              </div>
+              <div class="btns">
+                <button type="button" class="btn btn-ghost" data-prev>Back</button>
+                <button type="button" class="btn btn-red" data-next>Next</button>
+              </div>
+            </div>
+
+            <div class="form-step" data-step="players" hidden>
+              <h3 class="step-title" id="playersTitle">Your details</h3>
+              <div class="players" id="players"></div>
+              <fieldset>
+                <legend>Payment</legend>
+                <div class="choice two">
+                  <div class="pick"><input type="radio" name="pay" id="pay-now" value="now" checked><label class="tile" for="pay-now"><b>PAY NOW</b><span>Pay online with the QR after you submit</span></label></div>
+                  <div class="pick"><input type="radio" name="pay" id="pay-later" value="later"><label class="tile" for="pay-later"><b>PAY LATER</b><span>Admin contacts you on WhatsApp, then you pay</span></label></div>
+                </div>
+              </fieldset>
+              <div class="check">
+                <input type="checkbox" id="agree">
+                <label for="agree">I have read the rules and I will play by them.</label>
+              </div>
+              <p class="err" id="e-agree" aria-live="polite"></p>
+              <div class="btns">
+                <button type="button" class="btn btn-ghost" data-prev>Back</button>
+                <button type="submit" class="btn btn-red">Get my registration</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="done-panel" id="done" hidden>
+          <div class="tick" aria-hidden="true">✓</div>
+          <h3>Your registration is ready</h3>
+          <p id="doneText"></p>
+          <ol class="dsteps" id="doneSteps"></ol>
+          <div class="ref" id="doneRef"></div>
+          <div class="qrs" id="qrs" hidden>
+            <div class="qrbox" id="payBox" hidden>
+              <h4>Pay <span id="payAmt"></span></h4>
+              <div class="qr" id="payQr" role="img" aria-label="UPI payment QR code"></div>
+              <p>Pay to <b id="payee"></b></p>
+              <p>UPI ID: <b id="upiShow"></b></p>
+              <div class="row">
+                <a class="btn btn-red btn-sm" id="upiApp" href="#">Open UPI app</a>
+                <button type="button" class="btn btn-ghost btn-sm" id="copyUpi">Copy UPI ID</button>
+              </div>
+              <p class="small">Paying from this phone? Tap Open UPI app or copy the UPI ID. If nothing opens, scan the QR from another phone.</p>
+            </div>
+            <div class="qrbox" id="grpBox" hidden>
+              <h4>Join the WhatsApp group</h4>
+              <div class="qr" id="grpQr" role="img" aria-label="WhatsApp group QR code"></div>
+              <a class="btn btn-ghost btn-sm" id="grpLink" href="#" rel="noopener">Open group link</a>
+            </div>
+          </div>
+          <pre class="msg" id="doneMsg"></pre>
+          <p id="doneLogoNote" hidden>Attach your team logo in the same chat.</p>
+          <div class="row">
+            <a class="btn btn-red btn-sm" id="waSend" href="#" rel="noopener" hidden>Send registration on WhatsApp</a>
+            <button type="button" class="btn btn-bone btn-sm" id="copyMsg">Copy message</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="again">Register another player</button>
+          </div>
+          <p id="copyNote" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="highlights">
+  <div class="wrap">
+    <div class="yt">
+      <div class="play" aria-hidden="true"></div>
+      <div class="yt-copy">
+        <p class="eyebrow">Tournament highlights</p>
+        <h2>Watch every match on YouTube</h2>
+        <p>Highlights from each tournament go up on the channel within 48 hours, and the link is sent to your WhatsApp group.</p>
+        <p class="handle">YouTube @29rxp · Instagram @mrsuper_01</p>
+        <div class="cta-row">
+          <a class="btn btn-red" href="https://www.youtube.com/@29rxp" rel="noopener">Open YouTube</a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/mrsuper_01/" rel="noopener">Open Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<div id="viewLive" hidden>
+  <header class="live-hero">
+    <div class="wrap">
+      <div class="topbar">
+        <a class="mark" href="#home">ROXI<b>ARENA</b></a>
+        <nav class="nav" aria-label="Live page">
+          <a href="#home">← Back to tournaments</a>
+          <a href="#register">Register</a>
+          <a class="live" href="#live">Sunday Live</a>
+        </nav>
+      </div>
+      <div class="live-body">
+        <span class="onair idle" id="onair">Sunday special</span>
+        <h1>SUNDAY LIVE</h1>
+        <div class="next-live"><span id="nextLabel">Next live day</span><b id="nextDate">--</b></div>
+        <p class="lede">Roxi Arena goes live on YouTube every Sunday, with commentary. The first live tournament is Sunday 22 November 2026, all times IST.</p>
+        <div class="cta-row">
+          <a class="btn btn-red" href="https://www.youtube.com/@29rxp" rel="noopener">Watch on YouTube</a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/mrsuper_01/" rel="noopener">Instagram</a>
+          <a class="btn btn-ghost" id="liveReg" href="#register">Register for Sunday</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Sunday 22 November 2026</p>
+        <h2>Prizes and how to join</h2>
+      </div>
+      <ol class="sched" aria-label="Sunday 22 November schedule">
+        <li><time>10:00 AM</time><b>Solo</b><span>Live on YouTube with commentary</span></li>
+        <li><time>12:00 PM</time><b>Duo</b><span>Live on YouTube with commentary</span></li>
+        <li><time>3:00 PM</time><b>Solo</b><span>Second solo match</span></li>
+        <li class="tba"><time>To be announced</time><b>Duo</b><span>Time is posted in the WhatsApp group</span></li>
+      </ol>
+      <ul class="live-cols">
+        <li><h3>Register</h3><p>Choose Sunday live on the registration desk and enter your legal name, WhatsApp number, game UID and in-game name.</p></li>
+        <li><h3>Pay and join the group</h3><p>The organizer sends you a payment QR on WhatsApp. After you pay, you are added to the group with the room details.</p></li>
+        <li><h3>Play and watch</h3><p>The match is live on YouTube @29rxp with commentary. Highlights are uploaded within 48 hours and the link goes to your group.</p></li>
+      </ul>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Sunday live</th><th>Entry</th><th>Per kill</th><th>Winner prize</th></tr></thead>
+          <tbody>
+            <tr><td><b>Solo</b></td><td><b>₹30</b></td><td><b>₹10</b></td><td class="big"><b>₹250</b> for the winner</td></tr>
+            <tr><td><b>Duo</b></td><td><b>₹50</b> per team</td><td><b>₹10</b></td><td class="big"><b>₹250</b> Booyah prize</td></tr>
+            <tr class="soon"><td><b>Squad</b></td><td colspan="3">Coming soon. The date will be announced on YouTube and Instagram.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">The same rules apply on Sunday. Read them on the <a href="#rules">rules section</a>.</p>
+    </div>
+  </section>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="mark" href="#home">ROXI<b>ARENA</b></a>
+        <p class="foot-note">Room times, room details and updates are posted in the WhatsApp group after you register.</p>
+      </div>
+      <nav aria-label="Footer">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#modes">Modes</a></li>
+          <li><a href="#prizes">Prizes</a></li>
+          <li><a href="#rules">Rules</a></li>
+          <li><a href="#register">Register</a></li>
+          <li><a href="#live">Sunday Live</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="https://www.youtube.com/@29rxp" rel="noopener">YouTube @29rxp</a></li>
+          <li><a href="https://www.instagram.com/mrsuper_01/" rel="noopener">Instagram @mrsuper_01</a></li>
+          <li><a href="https://wa.me/919761026693" rel="noopener">Admin on WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="legal">© 2026 Roxi Arena. Free Fire and Garena are trademarks of their respective owners.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Settings you can edit ---------- */
+  var CONFIG = {
+    organizerWhatsApp: '919761026693',          /* digits with country code, e.g. 919876543210 */
+    upiId: 'rohit143822@okicici', payeeName: 'Rohit Pandit',                      /* your UPI ID, e.g. name@bank. Shows a payment QR after registration */
+    whatsappGroup: '',              /* your WhatsApp group invite link. Shows a join QR after registration */
+    start: '2026-11-09T12:00:00+05:30',
+    dayLabel: 'Monday 9 November 2026',
+    sunday: { label: 'Sunday 22 November 2026', solo: { fee: 30, time: 'Solo at 10:00 AM and 3:00 PM', prize: '₹10 per kill · Winner ₹250' }, duo: { fee: 50, time: 'Duo at 12:00 PM (other Duo time in the WhatsApp group)', prize: '₹10 per kill · Booyah ₹250' } },
+    modes: {
+      solo:  { label: 'Solo',  size: 1, cap: 52, filled: 0, open: true,  logo: 'none',     time: '12:00 PM' },
+      duo:   { label: 'Duo',   size: 2, cap: 25, filled: 0, open: true,  logo: 'optional', time: 'after 3:00 PM (exact time in the WhatsApp group)', fee: 30 },
+      squad: { label: 'Squad', size: 4, cap: 12, filled: 0, open: false, logo: 'required', time: 'announced in the WhatsApp group', fee: 40 }
+    }
+  };
+
+  /* ---------- Views: tournaments page and Sunday live page ---------- */
+  var vHome = $('#viewHome'), vLive = $('#viewLive');
+  function route(first) {
+    var h = location.hash.replace('#', '');
+    var live = h === 'live';
+    var was = vLive.hidden;
+    vHome.hidden = live; vLive.hidden = !live;
+    if (!first && !reduce && was === live) { var v = live ? vLive : vHome; v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in'); }
+    if (live) { window.scrollTo(0, 0); return; }
+    var el = h && h !== 'home' ? document.getElementById(h) : null;
+    if (el) el.scrollIntoView({ behavior: reduce || first ? 'auto' : 'smooth' });
+    else if (!first) window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', function () { route(false); });
+
+  /* ---------- 3D hero: wireframe trophy, floor grid, particles ---------- */
+  var cv = $('#stage'), hero = $('#hero'), ctx = cv.getContext('2d');
+  var W = 0, H = 0, dpr = 1, mx = 0, my = 0, tmx = 0, tmy = 0, running = true, t0 = performance.now();
+  var PROFILE = [[1.15,-2],[1.15,-1.85],[0.85,-1.85],[0.85,-1.6],[0.32,-1.45],[0.2,-1.0],[0.2,-0.35],[0.55,-0.1],[0.95,0.45],[1.1,1.1],[1.12,1.7]];
+  var SEG = 24, D = 8, RED = '255,59,67', BONE = '236,232,228';
+  var particles = [];
+  for (var i = 0; i < 70; i++) particles.push({ x: (Math.random() - 0.5) * 12, y: (Math.random() - 0.5) * 7, z: (Math.random() - 0.5) * 8, s: 0.15 + Math.random() * 0.35, c: Math.random() < 0.5 });
+
+  function size() {
+    var r = hero.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw(now) {
+    if (W < 2 || H < 2) return;
+    var t = (now - t0) / 1000;
+    var narrow = W < 900;
+    var unit = Math.min(H * 0.15, W * (narrow ? 0.12 : 0.11));
+    var F = unit * D;
+    var CX = narrow ? W * 0.5 : W * 0.74;
+    var CY = H * (narrow ? 0.62 : 0.52) + unit * 0.15;
+    var ry = (reduce ? 0.6 : t * 0.45) + tmx * 0.9;
+    var rx = 0.28 + tmy * 0.35;
+    var ca = Math.cos(ry), sa = Math.sin(ry), cx = Math.cos(rx), sx = Math.sin(rx);
+
+    function tr(x, y, z, yaw) {
+      var x1 = x, z1 = z;
+      if (yaw) { x1 = x * ca + z * sa; z1 = -x * sa + z * ca; }
+      var y2 = y * cx - z1 * sx, z2 = y * sx + z1 * cx;
+      var sc = F / (D - z2);
+      return [CX + x1 * sc, CY - y2 * sc, z2];
+    }
+    function seg(a, b, rgb, alpha) {
+      ctx.strokeStyle = 'rgba(' + rgb + ',' + alpha.toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+    function depthAlpha(z) { return Math.max(0.12, Math.min(1, 0.3 + 0.7 * (z + 2.6) / 5.2)); }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = narrow ? 0.5 : 1;
+    var g = ctx.createRadialGradient(CX, CY, 0, CX, CY, unit * 4.2);
+    g.addColorStop(0, 'rgba(255,59,67,0.22)'); g.addColorStop(1, 'rgba(255,59,67,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    ctx.lineWidth = 1;
+    var off = reduce ? 0 : (t * 0.35) % 1;
+    for (var k = -9; k <= 9; k++) {
+      for (var s = -9; s < 9; s++) {
+        var a = tr(k, -2, s - off, false), b = tr(k, -2, s + 1 - off, false);
+        var al = 0.22 * (1 - Math.hypot(k, s + 0.5 - off) / 10.5);
+        if (al > 0.01) seg(a, b, RED, al);
+        var c = tr(s, -2, k - off, false), d = tr(s + 1, -2, k - off, false);
+        var al2 = 0.22 * (1 - Math.hypot(s + 0.5, k - off) / 10.5);
+        if (al2 > 0.01) seg(c, d, RED, al2);
+      }
+    }
+
+    ctx.lineWidth = 1.2;
+    var pts = [];
+    for (var i = 0; i < PROFILE.length; i++) {
+      var row = [];
+      for (var j = 0; j <= SEG; j++) {
+        var th = (j / SEG) * Math.PI * 2;
+        row.push(tr(PROFILE[i][0] * Math.cos(th), PROFILE[i][1], PROFILE[i][0] * Math.sin(th), true));
+      }
+      pts.push(row);
+    }
+    for (var i2 = 0; i2 < pts.length; i2++) {
+      var rim = (i2 === pts.length - 1 || i2 === 1);
+      for (var j2 = 0; j2 < SEG; j2++) {
+        var p = pts[i2][j2], q = pts[i2][j2 + 1];
+        seg(p, q, rim ? BONE : RED, depthAlpha((p[2] + q[2]) / 2) * (rim ? 0.95 : 0.85));
+      }
+    }
+    for (var j3 = 0; j3 < SEG; j3 += 2) {
+      for (var i3 = 0; i3 < pts.length - 1; i3++) {
+        var p2 = pts[i3][j3], q2 = pts[i3 + 1][j3];
+        seg(p2, q2, RED, depthAlpha((p2[2] + q2[2]) / 2) * 0.6);
+      }
+    }
+    ctx.lineWidth = 2;
+    [-1, 1].forEach(function (sd) {
+      var prev = null;
+      for (var u = 0; u <= 16; u++) {
+        var tt = u / 16;
+        var cur = tr(sd * (1.08 + 0.45 * Math.sin(Math.PI * tt)), 1.4 - 1.05 * tt, 0, true);
+        if (prev) seg(prev, cur, BONE, depthAlpha((prev[2] + cur[2]) / 2));
+        prev = cur;
+      }
+    });
+    for (var n = 0; n < particles.length; n++) {
+      var pt = particles[n];
+      var yy = pt.y + (reduce ? 0 : ((t * pt.s * 0.4) % 7)); if (yy > 3.5) yy -= 7;
+      var pp = tr(pt.x + tmx * pt.z * 0.3, yy, pt.z, false);
+      ctx.fillStyle = 'rgba(' + (pt.c ? BONE : RED) + ',' + (depthAlpha(pp[2]) * 0.55).toFixed(3) + ')';
+      ctx.fillRect(pp[0], pp[1], 2, 2);
+    }
+    ctx.globalAlpha = 1;
+  }
+  function frame(now) {
+    if (!running) return;
+    tmx += (mx - tmx) * 0.08; tmy += (my - tmy) * 0.08;
+    draw(now);
+    requestAnimationFrame(frame);
+  }
+  size();
+  hero.addEventListener('pointermove', function (e) {
+    var r = hero.getBoundingClientRect();
+    mx = (e.clientX - r.left) / r.width - 0.5;
+    my = (e.clientY - r.top) / r.height - 0.5;
+    if (reduce) { tmx = mx; tmy = my; draw(performance.now()); }
+  });
+  hero.addEventListener('pointerleave', function () { mx = 0; my = 0; if (reduce) { tmx = 0; tmy = 0; draw(performance.now()); } });
+  function resized() { size(); draw(performance.now()); }
+  if (window.ResizeObserver) new ResizeObserver(resized).observe(hero);
+  window.addEventListener('resize', resized);
+  if (reduce) { draw(performance.now()); }
+  else {
+    requestAnimationFrame(frame);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (en) {
+        var vis = en[0].isIntersecting;
+        if (vis && !running) { running = true; requestAnimationFrame(frame); }
+        if (!vis) running = false;
+      }).observe(hero);
+    }
+  }
+
+  /* ---------- Countdown to the first solo match ---------- */
+  var target = new Date(CONFIG.start).getTime();
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function tick() {
+    var left = target - Date.now();
+    if (left <= 0) {
+      $('#countLabel').textContent = 'Tournaments are running. Register for the next date.';
+      ['d', 'h', 'm', 's'].forEach(function (k) { var u = $('#cd-' + k).parentNode; u.hidden = true; });
+      return;
+    }
+    var s = Math.floor(left / 1000);
+    $('#cd-d').textContent = pad(Math.floor(s / 86400));
+    $('#cd-h').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('#cd-m').textContent = pad(Math.floor(s % 3600 / 60));
+    $('#cd-s').textContent = pad(s % 60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---------- Sunday live page: next Sunday in IST ---------- */
+  (function () {
+    var istNow = new Date(Date.now() + 5.5 * 3600 * 1000);
+    var today = Date.UTC(istNow.getUTCFullYear(), istNow.getUTCMonth(), istNow.getUTCDate());
+    var startDay = Date.UTC(2026, 10, 22);
+    var base = Math.max(today, startDay);
+    var dow = new Date(base).getUTCDay();
+    var sunday = base + ((7 - dow) % 7) * 86400000;
+    var isToday = sunday === today;
+    var fmt = new Date(sunday).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    $('#nextDate').textContent = fmt;
+    $('#nextLabel').textContent = isToday ? 'Live day is today' : 'Next live day';
+    var oa = $('#onair');
+    if (isToday) { oa.classList.remove('idle'); oa.textContent = 'Sunday live day'; }
+  })();
+
+  /* ---------- Registration terminal lights up when in view ---------- */
+  var regEl = $('#register');
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function (en) { if (en[0].isIntersecting) regEl.classList.add('live'); }, { threshold: 0.2 }).observe(regEl);
+  } else { regEl.classList.add('live'); }
+
+  /* ---------- Mode status badges ---------- */
+  function statusText(m) {
+    if (!m.open) return 'Coming soon';
+    if (m.filled >= m.cap) return 'Full · next date open';
+    return m.filled > 0 ? 'Registration open · ' + (m.cap - m.filled) + ' left' : 'Registration open';
+  }
+  Object.keys(CONFIG.modes).forEach(function (k) {
+    var el = document.querySelector('[data-status="' + k + '"]');
+    if (el) el.textContent = statusText(CONFIG.modes[k]);
+  });
+
+  /* ---------- Player cards ---------- */
+  var playersEl = $('#players');
+  for (var pi = 1; pi <= 4; pi++) {
+    var card = document.createElement('div');
+    card.className = 'player'; card.id = 'card' + pi;
+    card.innerHTML =
+      '<h4 id="ptitle' + pi + '">Player ' + pi + '</h4>' +
+      '<div class="pgrid">' +
+      '<div class="field"><label for="p' + pi + 'Legal">Legal name</label><input id="p' + pi + 'Legal" type="text" maxlength="60" autocomplete="name" placeholder="As on your ID"><p class="err" id="e-p' + pi + 'Legal" aria-live="polite"></p></div>' +
+      '<div class="field"><label for="p' + pi + 'Wa">WhatsApp number</label><input id="p' + pi + 'Wa" type="tel" inputmode="tel" maxlength="18" placeholder="+91 98765 43210"><p class="err" id="e-p' + pi + 'Wa" aria-live="polite"></p></div>' +
+      '<div class="field"><label for="p' + pi + 'Uid">Game UID</label><input id="p' + pi + 'Uid" type="text" inputmode="numeric" maxlength="12" placeholder="e.g. 1029384756"><p class="err" id="e-p' + pi + 'Uid" aria-live="polite"></p></div>' +
+      '<div class="field"><label for="p' + pi + 'Ign">In-game name</label><input id="p' + pi + 'Ign" type="text" maxlength="20" placeholder="Name shown in game"><p class="err" id="e-p' + pi + 'Ign" aria-live="polite"></p></div>' +
+      '</div>';
+    playersEl.appendChild(card);
+  }
+
+  /* ---------- Form state ---------- */
+  var state = { mode: 'solo', day: 'daily', idx: 0 };
+  var logoOK = false, logoMsg = '', logoURL = null;
+  var UID = /^\d{8,12}$/;
+  var NAME = /^\p{L}[\p{L}\s.'-]{2,59}$/u;
+  var PHONE = /^\+?[0-9][0-9\s-]{8,16}$/;
+  var forms = Array.prototype.slice.call(document.querySelectorAll('.form-step'));
+
+  function curMode() { return CONFIG.modes[state.mode]; }
+  function flow() { return state.mode === 'solo' ? ['mode', 'players'] : ['mode', 'team', 'players']; }
+  function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function tier() { var r = document.querySelector('input[name="tier"]:checked'); return r ? Number(r.value) : 15; }
+  function fee() {
+    if (state.day === 'sunday' && CONFIG.sunday[state.mode]) return CONFIG.sunday[state.mode].fee;
+    return state.mode === 'solo' ? tier() : curMode().fee;
+  }
+
+  var squadIn = $('#mode-squad');
+  if (!CONFIG.modes.squad.open) squadIn.disabled = true;
+  else $('#squadSub').textContent = 'Back-to-back';
+
+  function setErr(id, msg) {
+    var el = document.getElementById(id), e = document.getElementById('e-' + id);
+    if (!e) return;
+    e.textContent = msg || '';
+    if (el) {
+      if (el.type === 'file') $('#drop').classList.toggle('invalid', !!msg);
+      else el.classList.toggle('invalid', !!msg);
+      el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    }
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.id && document.getElementById('e-' + e.target.id)) setErr(e.target.id, '');
+  });
+  $('#agree').addEventListener('change', function () { setErr('agree', ''); });
+
+  function renderSteps() {
+    var f = flow(), box = $('#steps');
+    Array.prototype.slice.call(box.querySelectorAll('.node')).forEach(function (n) { n.remove(); });
+    f.forEach(function (name, i) {
+      var n = document.createElement('div');
+      n.className = 'node' + (i === state.idx ? ' active' : '') + (i < state.idx ? ' done' : '');
+      n.textContent = i < state.idx ? '✓' : String(i + 1);
+      if (i === state.idx) n.setAttribute('aria-current', 'step');
+      box.appendChild(n);
+    });
+    $('#fill').style.width = (f.length > 1 ? state.idx / (f.length - 1) * 100 : 0) + '%';
+    $('#stepLabel').textContent = 'Step ' + (state.idx + 1) + ' of ' + f.length;
+  }
+
+  function applyMode() {
+    var m = curMode(), isSolo = state.mode === 'solo', sun = state.day === 'sunday';
+    $('#tierSet').hidden = !isSolo || sun;
+    for (var i = 1; i <= 4; i++) $('#card' + i).hidden = i > m.size;
+    for (var j = 1; j <= m.size; j++) {
+      $('#ptitle' + j).textContent = m.size === 1 ? 'Your details' : (j === 1 ? 'Player 1 · you' : 'Player ' + j);
+    }
+    $('#playersTitle').textContent = m.size === 1 ? 'Your details' : m.size === 2 ? 'Both players' : 'All four players';
+    $('#logoReq').textContent = m.logo === 'required' ? 'Required' : 'Optional';
+    var full = !sun && m.filled >= m.cap;
+    var prize = sun && CONFIG.sunday[state.mode] ? CONFIG.sunday[state.mode].prize : isSolo ? (tier() === 15 ? '₹10 per kill · Booyah ₹40' : '₹10 per kill · 1st ₹150 · 2nd ₹100 · 3rd free entry next match')
+      : state.mode === 'duo' ? '₹10 per kill · Booyah ₹40' : 'Prizes announced soon';
+    var info = '<strong>' + m.label + ' · ₹' + fee() + (isSolo ? ' entry' : ' entry per team') + '</strong>' + prize + '<br>' +
+      (full ? 'This mode is full for ' + CONFIG.dayLabel + '. You will be registered for the next date.'
+            : sun ? CONFIG.sunday.label + ', ' + (CONFIG.sunday[state.mode] ? CONFIG.sunday[state.mode].time : '') + '. Live on YouTube.' : CONFIG.dayLabel + ', ' + m.time + '.');
+    $('#modeInfo').innerHTML = info;
+    renderSteps();
+  }
+
+  function showStep() {
+    var name = flow()[state.idx];
+    forms.forEach(function (s) { s.hidden = s.dataset.step !== name; });
+    renderSteps();
+  }
+  function focusFirst() {
+    var s = document.querySelector('.form-step:not([hidden])');
+    var el = s && s.querySelector('input:not([type=file]):not([type=radio]):not([disabled])');
+    if (el) el.focus({ preventScroll: true });
+  }
+
+  document.querySelectorAll('input[name="mode"], input[name="tier"], input[name="day"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      var m = document.querySelector('input[name="mode"]:checked'), d = document.querySelector('input[name="day"]:checked');
+      state.mode = m ? m.value : 'solo';
+      state.day = d ? d.value : 'daily';
+      applyMode();
+    });
+  });
+
+  function validate(name) {
+    var first = null;
+    function bad(id, msg) { setErr(id, msg); if (!first) first = id; }
+    var m = curMode();
+    if (name === 'mode') {
+      if (!m.open) { first = 'mode-' + state.mode; }
+    }
+    if (name === 'team') {
+      var tn = val('teamName');
+      if (tn.length < 3 || tn.length > 24) bad('teamName', 'Enter a team name between 3 and 24 characters.'); else setErr('teamName', '');
+      var hasFile = fileIn.files && fileIn.files.length > 0;
+      if (m.logo === 'required' && !logoOK) bad('teamLogo', logoMsg || 'A team logo is required for squads. Add a PNG or JPG.');
+      else if (hasFile && !logoOK) bad('teamLogo', logoMsg || 'Fix the logo or remove it.');
+      else setErr('teamLogo', '');
+    }
+    if (name === 'players') {
+      var seenUid = {}, seenWa = {};
+      for (var i = 1; i <= m.size; i++) {
+        var p = 'p' + i;
+        if (!NAME.test(val(p + 'Legal'))) bad(p + 'Legal', 'Enter your full legal name.'); else setErr(p + 'Legal', '');
+        var wa = val(p + 'Wa'), digits = wa.replace(/\D/g, '');
+        if (!PHONE.test(wa) || digits.length < 10 || digits.length > 15) bad(p + 'Wa', 'Enter a WhatsApp number with 10 to 15 digits.');
+        else if (seenWa[digits]) bad(p + 'Wa', 'This number is already used for another player.');
+        else { setErr(p + 'Wa', ''); seenWa[digits] = true; }
+        var u = val(p + 'Uid');
+        if (!UID.test(u)) bad(p + 'Uid', 'A UID is 8 to 12 digits with no spaces.');
+        else if (seenUid[u]) bad(p + 'Uid', 'This UID is already used in your team.');
+        else { setErr(p + 'Uid', ''); seenUid[u] = true; }
+        var ign = val(p + 'Ign');
+        if (ign.length < 2 || ign.length > 20) bad(p + 'Ign', 'Enter your in-game name (2 to 20 characters).'); else setErr(p + 'Ign', '');
+      }
+      if (!$('#agree').checked) bad('agree', 'Tick the box to accept the rules.'); else setErr('agree', '');
+    }
+    if (first) { var f = document.getElementById(first); if (f) f.focus(); }
+    return !first;
+  }
+
+  function next() {
+    var name = flow()[state.idx];
+    if (!validate(name)) return;
+    if (state.idx < flow().length - 1) { state.idx++; showStep(); focusFirst(); }
+  }
+  document.querySelectorAll('[data-next]').forEach(function (b) { b.addEventListener('click', next); });
+  document.querySelectorAll('[data-prev]').forEach(function (b) { b.addEventListener('click', function () { if (state.idx > 0) { state.idx--; showStep(); focusFirst(); } }); });
+
+  /* ---------- Logo upload ---------- */
+  var fileIn = $('#teamLogo'), drop = $('#drop'), prev = $('#logoPrev');
+  function resetLogoUI() {
+    prev.hidden = true;
+    $('#dropTitle').textContent = 'Drop your logo here or browse';
+    $('#dropMeta').textContent = 'PNG or JPG, up to 2 MB, at least 256 × 256 px.';
+  }
+  function logoFail(msg) { logoOK = false; logoMsg = msg; resetLogoUI(); setErr('teamLogo', msg); }
+  fileIn.addEventListener('change', function () {
+    var f = fileIn.files && fileIn.files[0];
+    setErr('teamLogo', ''); logoMsg = ''; logoOK = false;
+    if (!f) { resetLogoUI(); return; }
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { logoFail('Use a PNG or JPG file.'); return; }
+    if (f.size > 2 * 1024 * 1024) { logoFail('That file is over 2 MB. Choose a smaller image.'); return; }
+    if (logoURL) URL.revokeObjectURL(logoURL);
+    logoURL = URL.createObjectURL(f);
+    var im = new Image();
+    im.onload = function () {
+      if (im.naturalWidth < 256 || im.naturalHeight < 256) { logoFail('The logo must be at least 256 × 256 px.'); return; }
+      logoOK = true; prev.src = logoURL; prev.hidden = false;
+      $('#dropTitle').textContent = f.name;
+      $('#dropMeta').textContent = im.naturalWidth + ' × ' + im.naturalHeight + ' px · ' + Math.round(f.size / 1024) + ' KB. Click to replace.';
+      setErr('teamLogo', '');
+    };
+    im.onerror = function () { logoFail('That image could not be read. Try another file.'); };
+    im.src = logoURL;
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function () { drop.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function () { drop.classList.remove('over'); }); });
+
+  /* ---------- Submit: build the message for the organizer ---------- */
+  var lastMsg = '';
+  function qrSvg(text) {
+    if (typeof qrcode !== 'function') return '';
+    try { var q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); } catch (err) { return ''; }
+  }
+  function renderQR(ref, payNow) {
+    var upi = (CONFIG.upiId || '').trim(), grp = (CONFIG.whatsappGroup || '').trim(), any = false;
+    var pay = $('#payBox'), gb = $('#grpBox');
+    pay.hidden = true; gb.hidden = true;
+    if (payNow && upi) {
+      var uri = 'upi://pay?pa=' + upi + '&pn=' + encodeURIComponent(CONFIG.payeeName || 'Roxi Arena') + '&am=' + fee() + '&cu=INR&tn=' + encodeURIComponent(ref);
+      var svg = qrSvg(uri);
+      $('#payQr').innerHTML = svg; $('#payQr').hidden = !svg;
+      $('#payAmt').textContent = '₹' + fee();
+      $('#payee').textContent = CONFIG.payeeName || 'Roxi Arena';
+      $('#upiShow').textContent = upi;
+      $('#upiApp').href = uri;
+      pay.hidden = false; any = true;
+    }
+    if (grp) {
+      var svg2 = qrSvg(grp);
+      $('#grpQr').innerHTML = svg2; $('#grpQr').hidden = !svg2;
+      $('#grpLink').href = grp; gb.hidden = false; any = true;
+    }
+    $('#qrs').hidden = !any;
+  }
+  $('#copyUpi').addEventListener('click', function () {
+    var note = $('#copyNote'), id = (CONFIG.upiId || '').trim();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(id).then(function () { note.textContent = 'UPI ID copied.'; }, function () { note.textContent = 'Select the UPI ID above and copy it.'; });
+    } else note.textContent = 'Select the UPI ID above and copy it.';
+  });
+  $('#regForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (flow()[state.idx] !== 'players') { next(); return; }
+    if (!validate('players')) return;
+    var m = curMode();
+    var payNow = (document.querySelector('input[name="pay"]:checked') || {}).value !== 'later';
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', ref = 'RX-';
+    for (var i = 0; i < 6; i++) ref += chars[Math.floor(Math.random() * chars.length)];
+    var sun = state.day === 'sunday', full = !sun && m.filled >= m.cap;
+    var lines = ['ROXI ARENA REGISTRATION', 'Ref: ' + ref,
+      'Mode: ' + m.label + (sun ? ' (Sunday live)' : state.mode === 'solo' ? ' (₹' + tier() + ' room)' : ''),
+      'Entry: ₹' + fee() + (state.mode === 'solo' ? '' : ' per team'),
+      'Date: ' + (sun ? CONFIG.sunday.label + ', ' + (CONFIG.sunday[state.mode] ? CONFIG.sunday[state.mode].time : '') : full ? 'next date (this date is full)' : CONFIG.dayLabel)];
+    if (state.mode !== 'solo') lines.push('Team: ' + val('teamName'));
+    lines.push('Payment: ' + (payNow ? 'paying online now' : 'pay after admin contacts me'));
+    for (var j = 1; j <= m.size; j++) {
+      var p = 'p' + j;
+      lines.push('', (m.size === 1 ? 'Player' : 'Player ' + j) + ':',
+        'Legal name: ' + val(p + 'Legal'), 'WhatsApp: ' + val(p + 'Wa'),
+        'Game UID: ' + val(p + 'Uid'), 'In-game name: ' + val(p + 'Ign'));
+    }
+    lastMsg = lines.join('\n');
+    $('#doneRef').textContent = ref;
+    $('#doneMsg').textContent = lastMsg;
+    $('#doneLogoNote').hidden = !(state.mode !== 'solo' && logoOK);
+    var who = state.mode === 'solo' ? 'your name' : 'your team name';
+    var amt = '₹' + fee() + (state.mode === 'solo' ? '' : ' per team');
+    $('#doneText').textContent = payNow ? 'Pay ' + amt + ' with the QR below, then send your registration to the admin.' : 'Send your registration to the admin. They will contact you on WhatsApp, and you pay after that.';
+    var steps = payNow
+      ? ['Scan the QR below and pay ' + amt + '.', 'Tap Send registration on WhatsApp to message the admin.', 'The admin messages you back. Reply with your payment screenshot and ' + who + '.', 'Once the payment is confirmed, you are added to the WhatsApp group.']
+      : ['Tap Send registration on WhatsApp to message the admin.', 'The admin contacts you on WhatsApp with the payment details.', 'Pay when the admin contacts you, then send the screenshot with ' + who + '.', 'Once the payment is confirmed, you are added to the WhatsApp group.'];
+    $('#doneSteps').innerHTML = steps.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+    renderQR(ref, payNow);
+    var wa = $('#waSend'), num = (CONFIG.organizerWhatsApp || '').replace(/\D/g, '');
+    if (num) { wa.href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(lastMsg); wa.hidden = false; } else { wa.hidden = true; }
+    $('#copyNote').textContent = '';
+    $('#formWrap').hidden = true; $('#done').hidden = false;
+    $('#stepLabel').textContent = 'Ready to send';
+    $('#done').scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  $('#copyMsg').addEventListener('click', function () {
+    var note = $('#copyNote');
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents($('#doneMsg'));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      note.textContent = 'Press copy on your keyboard or long-press to copy the selected message.';
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastMsg).then(function () { note.textContent = 'Message copied.'; }, fallback);
+    } else fallback();
+  });
+
+  $('#again').addEventListener('click', function () {
+    $('#regForm').reset();
+    logoOK = false; logoMsg = ''; resetLogoUI();
+    document.querySelectorAll('.err').forEach(function (n) { n.textContent = ''; });
+    document.querySelectorAll('.invalid').forEach(function (n) { n.classList.remove('invalid'); });
+    state.mode = 'solo'; state.day = 'daily'; state.idx = 0;
+    $('#done').hidden = true; $('#formWrap').hidden = false;
+    applyMode(); showStep();
+  });
+
+  var liveReg = $('#liveReg');
+  if (liveReg) liveReg.addEventListener('click', function () {
+    var r = $('#day-sunday'); if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event('change')); }
+  });
+  applyMode(); showStep();
+  route(true);
+
+  /* ---------- Scroll progress bar ---------- */
+  var prog = $('#prog'), ticking = false;
+  function onScroll() {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ---------- Reveal on scroll (content stays readable at rest) ---------- */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.section-head, .day, .mode, .table-wrap, .note, .rule, .terminal, .yt, .sched li, .live-cols li').forEach(function (el, i) {
+      if (el.getBoundingClientRect().top > window.innerHeight * 0.95) {
+        el.classList.add('rv');
+        var sib = Array.prototype.indexOf.call(el.parentNode.children, el);
+        el.style.transitionDelay = Math.min(sib, 4) * 80 + 'ms';
+        io.observe(el);
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
